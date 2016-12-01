@@ -1,0 +1,142 @@
+﻿@using Lab3_HMI.Models
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model List<Flight>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" href="~/css/table.css" />
+<link rel="stylesheet" href="~/css/hints.css" />
+<link rel="stylesheet" href="~/css/search.css" />
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/flights.js"></script>
+
+
+<h3>Поиск багажа по фамилии пассажира</h3>
+<div>
+    <a asp-action="AddFlight" class="btn btn-success" style="margin-top: 30px; margin-left:20px;">
+        <span class="glyphicon glyphicon-plus"></span>  Добавить рейс
+    </a>
+</div>
+
+@*<div class="container" style="margin:0px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group" id="adv-search">
+                <input type="text" class="form-control" placeholder="Search for snippets" />
+                <div class="input-group-btn">
+                    <div class="btn-group" role="group">
+                        <div class="dropdown dropdown-lg">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label for="filter">Filter by</label>
+                                        <select class="form-control">
+                                            <option value="0" selected>All Snippets</option>
+                                            <option value="1">Featured</option>
+                                            <option value="2">Most popular</option>
+                                            <option value="3">Top rated</option>
+                                            <option value="4">Most commented</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contain">Author</label>
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contain">Contains the words</label>
+                                        <input class="form-control" type="text" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+<div>
+    @if (Model != null && Model.Count != 0)
+    {
+        var count = 1;
+        <table class="simple-little-table">
+            <tr>
+                <th><b>№ рейса</b></th>
+                <th><b>Название авиакомпании</b></th>
+                <th><b>Тип самолета</b></th>
+                <th><b>Время отправки</b></th>
+                <th><b>Точка отправки</b></th>
+                <th><b>Точка прибытия</b></th>
+                <th><b>Время прибытия</b></th>
+            </tr>
+            @foreach (var flight in Model)
+                {
+                <tr>
+                    <td>@count.</td>
+                    <td>@flight.CompanyName</td>
+                    <td>@flight.AircraftType</td>
+                    <td>@flight.DateOfStart</td>
+                    <td>@flight.DepaturePoint</td>
+                    <td>@flight.ArrivalPoint</td>
+                    <td>@flight.DateOfFinish</td>
+                    <td style="width:80px;">
+                        <span class="table-up glyphicon glyphicon-arrow-up"></span>
+                        <span class="table-down glyphicon glyphicon-arrow-down"></span>
+                    </td>
+                    <td>
+                        <a class="glyphicon glyphicon-user tool_tip" asp-action="PassengersOfFlight" asp-route-flightId="@flight.Id" style="color:teal;">
+                            <span class="custom info">
+                                <img src="~/images/Info.png" alt="Информация" style="margin-left:-150px;" height="48" width="48" />
+                                <em>Информация</em>
+                                Просмотр информации о пассажирах, багаж которых находится в данном рейсе
+                            </span>
+                        </a>
+                    </td>
+                    <td><a asp-action="EditFlight" asp-route-flightId="@flight.Id" class="glyphicon glyphicon-pencil" title="Редактировать" style="color:cornflowerblue;"></a></td>
+                    <td>
+                        <a asp-action="DeleteFlight" asp-route-flightId="@flight.Id" class="glyphicon glyphicon-trash" title="Удалить" style="color:crimson;"></a>
+                    </td>
+                </tr>
+                count++;
+            }
+        </table>
+    }
+    else
+    {
+        <h3>В системе отсутствуют данные о рейсах</h3>
+    }
+</div>
+
+
+<style>
+    table {
+        margin-top: 40px;
+    }
+
+    /*td {
+        margin-right: 10px;
+        padding-right: 40px;
+        padding-top: 10px;
+    }*/
+
+    a {
+        cursor: pointer;
+    }
+
+    .planeIcon {
+        -webkit-transform: rotate(90deg); /* Chrome y Safari */
+        -moz-transform: rotate(90deg); /* Firefox */
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); /* Internet Explorer */
+        -o-transform: rotate(90deg); /* Opera */
+        display: inline-block;
+        padding-left: 8px;
+        vertical-align: text-top;
+        text-indent: 0px;
+    }
+</style>
